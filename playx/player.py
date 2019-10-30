@@ -13,8 +13,10 @@ from playx.youtube import (
 )
 
 from playx.songfinder import (
+
     search,
     search_with_exclude
+
 )
 
 from playx.logger import (
@@ -174,6 +176,7 @@ class NamePlayer():
             show_lyrics=False,
             no_cache=False,
             no_kw_in_search=False,
+            aura=False
             play_something_new=False
     ):
         self.name = name
@@ -184,21 +187,23 @@ class NamePlayer():
         self.title = ''
         self.stream_url = ''
         self.no_kw_in_search = no_kw_in_search
+        self.aura = aura
         self.play_something_new = play_something_new
 
     def _get_youtube_data_name(self):
         """
         Search youtube and get its data.
         """
-        match = search_locally(self.name)
-        if self.play_something_new and match:
-            data = search_with_exclude(self.name, match, self.no_kw_in_search)
+        if self.aura:
+            data = search_with_exclude(self.name,self.match)
         else:
-            data = search(self.name)
+            data = search(self.name, self.no_kw_in_search)
+
 
         self.title = data.title
         self.URL = data.url
         self.stream_url = grab_link(data.url)
+
 
     def _stream_from_name(self):
         """Start streaming the song.
@@ -206,8 +211,15 @@ class NamePlayer():
         First search in the local cache.
         If no song is found in the cache, search in the youtube.
         """
+       
+        if self.aura:
+            self.match = search_locally(self.name)
+            self._get_youtube_data_name()
+            update_URL_cache(self.title, self.URL)
+            self._dw()
+            
         # Need to check if searching locally is forbidden
-        if not self.dont_cache_search:
+        elif not self.dont_cache_search:
             match = search_locally(self.name)
             if match:
                 self.title = match[0]
@@ -253,7 +265,7 @@ class Player(URLPlayer, NamePlayer):
             no_cache=False,
             no_related=False,
             no_kw_in_search=False,
-            play_something_new=False
+            aura=False
     ):
         """
         data can be anything of the above supported
@@ -279,8 +291,7 @@ class Player(URLPlayer, NamePlayer):
             dont_cache_search=dont_cache_search,
             no_cache=no_cache,
             no_kw_in_search=no_kw_in_search,
-            play_something_new=play_something_new
-
+            aura=aura
         )
         self._iterable_list = []
         self.data = data

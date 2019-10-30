@@ -2,36 +2,36 @@
 """It is an abstract module for searching songs"""
 
 from playx.youtube import search_youtube
-from difflib import SequenceMatcher
+from playx.stringutils import (
+    get_closest_match_ignorecase,
+    fix_title
+)
+import random
 
 
-def search(song):
+def search(song, no_kw_in_search):
     """Search the song in youtube."""
-    videos = search_youtube(song)
-    try:
-        video = videos[0]
-    except IndexError:
-        return None
-    return video
-
-
-def search_with_exclude(song, exclude_songs, no_kw_in_search):
-    """Search the song in youtube but removes result pass in exclude"""
-    print("no_kw_in_search {}".format(no_kw_in_search))
     videos = search_youtube(song, no_kw_in_search)
-    # print("Excluding {} and choosing one from {} option".format(exclude_songs, len(videos)))
     try:
         video = videos[0]
-        for i in range(len(videos)):
-            video = videos[i]
-            # if video.title == exclude_songs:
-            #     break
-            similar_ratio = SequenceMatcher(None, video.title, exclude_songs[0]).ratio()
-            # print("Matching {} <----> {} Result: {}".format(video.title, exclude_songs[0], similar_ratio))
-            if similar_ratio < 0.5:
-                break
-
     except IndexError:
         return None
-
     return video
+
+
+def search_with_exclude(song, songs_to_exclude):
+    """Search the song in youtube and remove songs passed in songs_to_exclude"""
+    videos = search_youtube(song, skip_kw=True)
+    string_list = []
+    for video in videos:
+        fixed_title = fix_title(video.title)
+        string_list.append(fixed_title)
+
+    if songs_to_exclude:
+        item_to_remove = get_closest_match_ignorecase(string_list, songs_to_exclude[0])
+        if item_to_remove:
+            index = string_list.index(item_to_remove)
+            del string_list[index]
+            del videos[index]
+
+    return random.choice(videos)

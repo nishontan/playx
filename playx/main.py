@@ -85,8 +85,8 @@ def parse():
                         it has no effect.", default=None, type=int)
     parser.add_argument('--skip-kw', help="If passed does not add keywords to YouTube search query",
                         action='store_true')
-    parser.add_argument('--something-new', help="If passed plays, does not play a song that exist in cache",
-                        action='store_true')
+    parser.add_argument('--aura', help='Use this to play YT compiled playlists', action='store_true')
+
     args = parser.parse_args()
     return parser, args
 
@@ -145,7 +145,7 @@ def playx(parser, args, song):
             no_cache=args.no_cache,
             no_related=args.no_related,
             no_kw_in_search=args.skip_kw,
-            play_something_new=args.something_new
+            aura=args.aura
         )
         player.play()
 
