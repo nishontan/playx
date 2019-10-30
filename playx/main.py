@@ -86,6 +86,7 @@ def parse():
     parser.add_argument('--skip-kw', help="If passed does not add keywords to YouTube search query",
                         action='store_true')
     parser.add_argument('--aura', help='Use this to play YT compiled playlists', action='store_true')
+
     args = parser.parse_args()
     return parser, args
 

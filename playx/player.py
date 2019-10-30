@@ -13,7 +13,10 @@ from playx.youtube import (
 )
 
 from playx.songfinder import (
-    search,search_with_exclude
+
+    search,
+    search_with_exclude
+
 )
 
 from playx.logger import (
@@ -174,6 +177,7 @@ class NamePlayer():
             no_cache=False,
             no_kw_in_search=False,
             aura=False
+            play_something_new=False
     ):
         self.name = name
         self.URL = ''
@@ -184,6 +188,7 @@ class NamePlayer():
         self.stream_url = ''
         self.no_kw_in_search = no_kw_in_search
         self.aura = aura
+        self.play_something_new = play_something_new
 
     def _get_youtube_data_name(self):
         """
@@ -193,6 +198,7 @@ class NamePlayer():
             data = search_with_exclude(self.name,self.match)
         else:
             data = search(self.name, self.no_kw_in_search)
+
 
         self.title = data.title
         self.URL = data.url
