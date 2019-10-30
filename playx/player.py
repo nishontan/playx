@@ -177,7 +177,6 @@ class NamePlayer():
             no_cache=False,
             no_kw_in_search=False,
             aura=False
-            play_something_new=False
     ):
         self.name = name
         self.URL = ''
@@ -188,7 +187,6 @@ class NamePlayer():
         self.stream_url = ''
         self.no_kw_in_search = no_kw_in_search
         self.aura = aura
-        self.play_something_new = play_something_new
 
     def _get_youtube_data_name(self):
         """
