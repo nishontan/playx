@@ -85,6 +85,7 @@ def parse():
                         it has no effect.", default=None, type=int)
     parser.add_argument('--skip-kw', help="If passed does not add keywords to YouTube search query",
                         action='store_true')
+    parser.add_argument('--aura', help='Use this to play YT compiled playlists', action='store_true')
     args = parser.parse_args()
     return parser, args
 
@@ -125,25 +126,26 @@ def playx(parser, args, song):
     if playlist.is_playlist():
         data = playlist.get_data()
         player = Player(
-                        data,
-                        playlisttype=playlist.type,
-                        show_lyrics=args.lyrics,
-                        dont_cache_search=args.dont_cache_search,
-                        no_cache=args.no_cache,
-                        no_related=args.no_related
-                        )
+            data,
+            playlisttype=playlist.type,
+            show_lyrics=args.lyrics,
+            dont_cache_search=args.dont_cache_search,
+            no_cache=args.no_cache,
+            no_related=args.no_related
+        )
         player.play()
     elif not song:
         parser.print_help()
     else:
         player = Player(
-                        song,
-                        show_lyrics=args.lyrics,
-                        dont_cache_search=args.dont_cache_search,
-                        no_cache=args.no_cache,
-                        no_related=args.no_related,
-                        no_kw_in_search=args.skip_kw
-                        )
+            song,
+            show_lyrics=args.lyrics,
+            dont_cache_search=args.dont_cache_search,
+            no_cache=args.no_cache,
+            no_related=args.no_related,
+            no_kw_in_search=args.skip_kw,
+            aura=args.aura
+        )
         player.play()
 
 
